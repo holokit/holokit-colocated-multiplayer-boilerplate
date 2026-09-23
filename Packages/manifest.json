@@ -1,25 +1,28 @@
 {
-  "scopedRegistries": [{
-    "name": "OpenUPM",
-    "url": "https://package.openupm.com",
-    "scopes": [
-      "org.realitydeslab",
-      "io.holokit"
-    ]
-  }],
+  "scopedRegistries": [
+    {
+      "name": "OpenUPM",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "org.realitydeslab",
+        "io.holokit"
+      ]
+    }
+  ],
   "dependencies": {
-    "org.realitydeslab.netcode.transport.multipeer-connectivity": "1.1.0",
     "com.immersal.core": "https://github.com/immersal/imdk-unity.git",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.feature.development": "1.0.2",
-    "com.unity.netcode.gameobjects": "1.10.0",
-    "com.unity.render-pipelines.universal": "14.0.3",
+    "com.unity.netcode.gameobjects": "2.13.3",
+    "com.unity.render-pipelines.universal": "17.3.0",
     "com.unity.ugui": "2.0.0",
-    "com.unity.xr.arcore": "5.1.5",
-    "com.unity.xr.arfoundation": "5.1.5",
-    "com.unity.xr.arkit": "5.1.5",
+    "com.unity.xr.arcore": "6.6.2",
+    "com.unity.xr.arfoundation": "6.6.2",
+    "com.unity.xr.arkit": "6.6.2",
     "io.holokit.image-tracking-relocalization": "https://github.com/holokit/holokit-image-tracking-relocalization.git",
-    "io.holokit.unity-sdk": "0.5.0",
+    "io.holokit.unity-sdk": "0.5.5",
+    "org.realitydeslab.netcode.transport.network-framework": "https://github.com/realitydeslab/netcode-transport-network-framework.git#v2.0.0",
+    "com.unity.modules.accessibility": "1.0.0",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
@@ -51,5 +54,8 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  }
+  },
+  "testables": [
+    "org.realitydeslab.netcode.transport.network-framework"
+  ]
 }

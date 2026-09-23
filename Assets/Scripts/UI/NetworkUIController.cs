@@ -29,9 +29,23 @@ namespace HoloKit.ColocatedMultiplayerBoilerplate
 
         public UnityEvent<bool> OnVisibilityChanged;
 
+        private HoloKitCameraManager m_HoloKitCameraManager;
+
         private void Start()
         {
-            FindObjectOfType<HoloKitCameraManager>().OnScreenRenderModeChanged += OnScreenRenderModeChanged;
+            m_HoloKitCameraManager = FindFirstObjectByType<HoloKitCameraManager>();
+            if (m_HoloKitCameraManager != null)
+                m_HoloKitCameraManager.OnScreenRenderModeChanged += OnScreenRenderModeChanged;
+            // Covers the host leaving, a rejected connection, or a failed connection attempt.
+            NetworkManager.Singleton.OnClientStopped += OnNetworkStopped;
+        }
+
+        private void OnDestroy()
+        {
+            if (m_HoloKitCameraManager != null)
+                m_HoloKitCameraManager.OnScreenRenderModeChanged -= OnScreenRenderModeChanged;
+            if (NetworkManager.Singleton != null)
+                NetworkManager.Singleton.OnClientStopped -= OnNetworkStopped;
         }
 
         private void OnScreenRenderModeChanged(ScreenRenderMode renderMode)
@@ -42,45 +56,55 @@ namespace HoloKit.ColocatedMultiplayerBoilerplate
 
         private void Update()
         {
-            if (NetworkManager.Singleton.IsConnectedClient)
-            {
-                m_FireButton.SetActive(true);
-            }
-            else
-            {
-                m_FireButton.SetActive(false);
-            }
+            m_FireButton.SetActive(NetworkManager.Singleton.IsConnectedClient);
         }
 
         public void StartHost()
         {
             OnBeforeHostStarted?.Invoke();
-            NetworkManager.Singleton.StartHost();
+            if (!NetworkManager.Singleton.StartHost())
+            {
+                Debug.LogError("[NetworkUIController] Failed to start host");
+                return;
+            }
             OnHostStarted?.Invoke();
-
-            m_StartHostButton.SetActive(false);
-            m_StartClientButton.SetActive(false);
-            m_ShutdownButton.SetActive(true);
+            ShowSessionButtons(true);
         }
 
         public void StartClient()
         {
-            NetworkManager.Singleton.StartClient();
+            if (!NetworkManager.Singleton.StartClient())
+            {
+                Debug.LogError("[NetworkUIController] Failed to start client");
+                return;
+            }
             OnClientStarted?.Invoke();
-
-            m_StartHostButton.SetActive(false);
-            m_StartClientButton.SetActive(false);
-            m_ShutdownButton.SetActive(true);
+            ShowSessionButtons(true);
         }
 
         public void Shutdown()
         {
             NetworkManager.Singleton.Shutdown();
-            OnShutdown?.Invoke();
+            ResetUI();
+        }
 
-            m_StartHostButton.SetActive(true);
-            m_StartClientButton.SetActive(true);
-            m_ShutdownButton.SetActive(false);
+        private void OnNetworkStopped(bool wasHost)
+        {
+            if (m_ShutdownButton.activeSelf)
+                ResetUI();
+        }
+
+        private void ResetUI()
+        {
+            OnShutdown?.Invoke();
+            ShowSessionButtons(false);
+        }
+
+        private void ShowSessionButtons(bool inSession)
+        {
+            m_StartHostButton.SetActive(!inSession);
+            m_StartClientButton.SetActive(!inSession);
+            m_ShutdownButton.SetActive(inSession);
         }
     }
 }

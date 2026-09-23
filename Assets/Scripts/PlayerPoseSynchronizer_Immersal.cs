@@ -33,15 +33,18 @@ namespace HoloKit.ColocatedMultiplayerBoilerplate
         {
             if (IsOwner)
             {
-                //transform.SetParent(FindObjectOfType<ARMap>().transform);
-                m_CenterEyePose = FindObjectOfType<HoloKitCameraManager>().CenterEyePose;
+                //transform.SetParent(FindFirstObjectByType<ARMap>().transform);
+                m_CenterEyePose = FindFirstObjectByType<HoloKitCameraManager>().CenterEyePose;
             }
-            m_XRSpace = FindObjectOfType<XRSpace>();
+            m_XRSpace = FindFirstObjectByType<XRSpace>();
         }
 
         private void Update()
         {
-            if (IsOwner)
+            // Not spawned yet, or the scene has no Immersal space or HoloKit camera.
+            if (!IsSpawned || m_XRSpace == null)
+                return;
+            if (IsOwner && m_CenterEyePose != null)
             {
                 m_RelativePosition.Value = m_XRSpace.transform.InverseTransformPoint(m_CenterEyePose.position);
                 m_RelativeRotation.Value = Quaternion.Inverse(m_XRSpace.transform.rotation) * m_CenterEyePose.rotation;
@@ -50,6 +53,8 @@ namespace HoloKit.ColocatedMultiplayerBoilerplate
 
         private void LateUpdate()
         {
+            if (!IsSpawned || m_XRSpace == null)
+                return;
             Vector3 targetPosition = m_XRSpace.transform.TransformPoint(m_RelativePosition.Value);
             Quaternion targetRotation = m_XRSpace.transform.rotation * m_RelativeRotation.Value;
 

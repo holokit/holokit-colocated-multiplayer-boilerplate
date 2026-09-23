@@ -8,7 +8,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Multiplayer AR Boilerplate_Immersal.unity
     guid: ba9e47e3a93434b30b96cd6a9c5d8546
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Multiplayer AR Boilerplate_Dynamically Rendered Marker Relocalization.unity
     guid: 0c0a355b7059046598904caac5075b79
   - enabled: 1
@@ -23,3 +23,4 @@ EditorBuildSettings:
     com.unity.xr.magicleap.magic_leap_settings: {fileID: 11400000, guid: 573e6ab1f7888448d9d1150fb20a27a5, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 0baf2c601641d904191e540fda355c5e, type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 5066d500c9e54c64aa10117cec1ae4bf, type: 2}
+  m_UseUCBPForAssetBundles: 0

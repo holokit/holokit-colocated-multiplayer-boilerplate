@@ -3438,15 +3438,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1517476308}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a34c91f8a5fd946968f5c22555ab3655, type: 3}
+  m_Script: {fileID: 11500000, guid: 3d3dcd16a94c647df879cf8b8846c4f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SessionId: 
-  Nickname: holokit
+  SessionId: holokit-colocated-boilerplate
+  Nickname: 
   AutoAdvertise: 1
   AutoApproveConnectionRequest: 1
   AutoBrowse: 1
-  AutoSendConnectionRequest: 1
+  AutoConnectToHost: 1
 --- !u!114 &1517476310
 MonoBehaviour:
   m_ObjectHideFlags: 0

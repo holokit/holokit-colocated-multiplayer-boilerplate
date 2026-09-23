@@ -26,7 +26,7 @@ namespace HoloKit.ColocatedMultiplayerBoilerplate
                 // Send the request and wait for a response
                 yield return webRequest.SendWebRequest();
 
-                if (webRequest.isNetworkError || webRequest.isHttpError)
+                if (webRequest.result != UnityWebRequest.Result.Success)
                 {
                     Debug.Log($"Error requesting network permission: {webRequest.error}");
                 }

@@ -32,23 +32,15 @@ namespace HoloKit.ColocatedMultiplayerBoilerplate
             }
         }
 
-        [ServerRpc(RequireOwnership = false)]
-        private void PingServerRpc(float timestamp, ServerRpcParams serverRpcParams = default)
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+        private void PingServerRpc(float timestamp, RpcParams rpcParams = default)
         {
-            var clientId = serverRpcParams.Receive.SenderClientId;
-
-            ClientRpcParams clientRpcParams = new ClientRpcParams
-            {
-                Send = new ClientRpcSendParams
-                {
-                    TargetClientIds = new ulong[] { clientId }
-                }
-            };
-            PongClientRpc(timestamp, clientRpcParams);
+            // Answer only the client that pinged.
+            PongClientRpc(timestamp, RpcTarget.Single(rpcParams.Receive.SenderClientId, RpcTargetUse.Temp));
         }
 
-        [ClientRpc]
-        private void PongClientRpc(float timestamp, ClientRpcParams _ = default)
+        [Rpc(SendTo.SpecifiedInParams)]
+        private void PongClientRpc(float timestamp, RpcParams rpcParams)
         {
             int rtt = Mathf.FloorToInt((Time.time - timestamp) * 1000f);
             OnReceivedRtt?.Invoke(rtt);

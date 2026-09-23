@@ -17,7 +17,7 @@ namespace HoloKit.ColocatedMultiplayerBoilerplate
 
         private void Start()
         {
-            FindObjectOfType<HoloKitCameraManager>().OnScreenRenderModeChanged += OnScreenRenderModeChanged;
+            FindFirstObjectByType<HoloKitCameraManager>().OnScreenRenderModeChanged += OnScreenRenderModeChanged;
         }
 
         private void OnScreenRenderModeChanged(ScreenRenderMode renderMode)
