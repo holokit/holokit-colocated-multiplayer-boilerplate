@@ -2,7 +2,8 @@
 // SPDX-FileContributor: Yuchen Zhang <yuchenz27@outlook.com>
 // SPDX-License-Identifier: MIT
 
-using System.Net;
+using System.Linq;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using UnityEngine;
 using Unity.Netcode;
@@ -65,17 +66,21 @@ namespace HoloKit.ColocatedMultiplayerBoilerplate
             gameObject.SetActive(visible);
         }
 
+        /// <summary>
+        /// The IPv4 address other devices on the same Wi-Fi can reach, preferring Wi-Fi (en0).
+        /// Returns "Unavailable" instead of throwing when the device has no network.
+        /// </summary>
         public string GetLocalIPAddress()
         {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip.ToString();
-                }
-            }
-            throw new System.Exception("No network adapters with an IPv4 address in the system!");
+            var candidates = NetworkInterface.GetAllNetworkInterfaces()
+                .Where(nic => nic.OperationalStatus == OperationalStatus.Up &&
+                              nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                .OrderBy(nic => nic.Name == "en0" ? 0 : 1)
+                .SelectMany(nic => nic.GetIPProperties().UnicastAddresses)
+                .Select(address => address.Address)
+                .Where(ip => ip.AddressFamily == AddressFamily.InterNetwork && !System.Net.IPAddress.IsLoopback(ip));
+            var first = candidates.FirstOrDefault();
+            return first != null ? first.ToString() : "Unavailable";
         }
     }
 }

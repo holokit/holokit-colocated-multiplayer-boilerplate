@@ -1,4 +1,4 @@
-﻿// SPDX-FileCopyrightText: Copyright 2023 Reality Design Lab <dev@reality.design>
+// SPDX-FileCopyrightText: Copyright 2023 Reality Design Lab <dev@reality.design>
 // SPDX-FileContributor: Yuchen Zhang <yuchenz27@outlook.com>
 // SPDX-License-Identifier: MIT
 
@@ -13,7 +13,8 @@ public class iOSPostProcessBuild
 {
 #if UNITY_IOS
 #pragma warning disable 0162
-	[PostProcessBuild]
+	// Runs after the HoloKit SDK's post-processor (order 0) so it can undo the flag noted below.
+	[PostProcessBuild(1000)]
 	public static void OnPostprocessBuild(BuildTarget buildTarget, string buildPath)
 	{
 		if (buildTarget == BuildTarget.iOS)
@@ -29,17 +30,24 @@ public class iOSPostProcessBuild
 
 			var pbxProject = new PBXProject();
 			pbxProject.ReadFromFile(projectPath);
-			string target = pbxProject.GetUnityMainTargetGuid();
-			pbxProject.SetBuildProperty(target, "ENABLE_BITCODE", "NO");
+			// Some of these targets don't exist in every Unity version; skip the missing ones.
+			string[] targets =
+			{
+				pbxProject.GetUnityMainTargetGuid(),
+				pbxProject.GetUnityFrameworkTargetGuid(),
+				pbxProject.TargetGuidByName(PBXProject.GetUnityTestTargetName()),
+				pbxProject.TargetGuidByName("GameAssembly"),
+			};
+			foreach (string target in targets)
+			{
+				if (!string.IsNullOrEmpty(target))
+					pbxProject.SetBuildProperty(target, "ENABLE_BITCODE", "NO");
+			}
 
-			target = pbxProject.TargetGuidByName(PBXProject.GetUnityTestTargetName());
-			pbxProject.SetBuildProperty(target, "ENABLE_BITCODE", "NO");
-
-			target = pbxProject.GetUnityFrameworkTargetGuid();
-			pbxProject.SetBuildProperty(target, "ENABLE_BITCODE", "NO");
-
-			target = pbxProject.TargetGuidByName("GameAssembly");
-			pbxProject.SetBuildProperty(target, "ENABLE_BITCODE", "NO");
+			// HoloKit SDK 0.5.5 adds "-ld64" (the Xcode 15 classic-linker switch). Newer Xcode
+			// linkers reject it and clang reads it as "-l d64", so the link fails. Remove it.
+			pbxProject.UpdateBuildProperty(pbxProject.GetUnityFrameworkTargetGuid(), "OTHER_LDFLAGS",
+				new string[0], new[] { "-ld64" });
 
 	        pbxProject.WriteToFile(projectPath);
 		}

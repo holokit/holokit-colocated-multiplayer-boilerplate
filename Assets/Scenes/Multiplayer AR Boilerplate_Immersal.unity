@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 13667706}
   - component: {fileID: 13667707}
   m_Layer: 0
-  m_Name: AirDrop Toggle
+  m_Name: Nearby Toggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -210,7 +210,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1390328011}
         m_TargetAssemblyTypeName: TransportSelector, Assembly-CSharp
-        m_MethodName: OnAirDropToggled
+        m_MethodName: OnNearbyToggled
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3790,9 +3790,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baf0d70aa3f394340954bc89641c2e09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AirDropTransport: {fileID: 1517476309}
+  m_NearbyTransport: {fileID: 1517476309}
   m_UnityTransport: {fileID: 1517476312}
-  m_AirDropToggle: {fileID: 13667707}
+  m_NearbyToggle: {fileID: 13667707}
   m_RouterToggle: {fileID: 290337881}
   m_DefaultTransport: 0
 --- !u!1 &1437144300
@@ -4071,15 +4071,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1517476308}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a34c91f8a5fd946968f5c22555ab3655, type: 3}
+  m_Script: {fileID: 11500000, guid: 3d3dcd16a94c647df879cf8b8846c4f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SessionId: 
-  Nickname: holokit
+  SessionId: holokit-colocated-boilerplate
+  Nickname: 
   AutoAdvertise: 1
   AutoApproveConnectionRequest: 1
   AutoBrowse: 1
-  AutoSendConnectionRequest: 1
+  AutoConnectToHost: 1
 --- !u!114 &1517476310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4305,7 +4305,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: AirDrop
+  m_Text: Nearby
 --- !u!222 &1700196678
 CanvasRenderer:
   m_ObjectHideFlags: 0

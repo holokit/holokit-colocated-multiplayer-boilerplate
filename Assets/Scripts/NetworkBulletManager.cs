@@ -43,13 +43,13 @@ namespace HoloKit.ColocatedMultiplayerBoilerplate
             SpawnBulletServerRpc(m_CenterEyePose.position, m_CenterEyePose.rotation);
         }
 
-        [ServerRpc(RequireOwnership = false)]
-        public void SpawnBulletServerRpc(Vector3 position, Quaternion rotation, ServerRpcParams serverRpcParams = default)
+        [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+        public void SpawnBulletServerRpc(Vector3 position, Quaternion rotation, RpcParams rpcParams = default)
         {
             if (m_RelocalizationMode == RelocalizationMode.ImageTrackingRelocalizatioin)
             {
                 var bullet = Instantiate(m_BulletPrefab, position + rotation * m_SpawnOffset, rotation);
-                bullet.GetComponent<NetworkObject>().SpawnWithOwnership(serverRpcParams.Receive.SenderClientId);
+                bullet.GetComponent<NetworkObject>().SpawnWithOwnership(rpcParams.Receive.SenderClientId);
                 return;
             }
 
@@ -63,7 +63,7 @@ namespace HoloKit.ColocatedMultiplayerBoilerplate
                 var bullet = Instantiate(m_BulletPrefab, m_XRSpace.transform);
                 bullet.transform.localPosition = relativePosition;
                 bullet.transform.localRotation = relativeRotation;
-                bullet.GetComponent<NetworkObject>().SpawnWithOwnership(serverRpcParams.Receive.SenderClientId);
+                bullet.GetComponent<NetworkObject>().SpawnWithOwnership(rpcParams.Receive.SenderClientId);
                 return;
             }
         }

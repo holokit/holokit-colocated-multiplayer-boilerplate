@@ -17,7 +17,7 @@ namespace HoloKit.ColocatedMultiplayerBoilerplate
 
         private void Start()
         {
-            m_CenterEyePose = FindObjectOfType<HoloKitCameraManager>().CenterEyePose;
+            m_CenterEyePose = FindFirstObjectByType<HoloKitCameraManager>().CenterEyePose;
         }
 
         private void LateUpdate()
